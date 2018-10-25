@@ -1,7 +1,5 @@
 ## Run the application locally
 
-1. Set the correct Cloud SDK project via `gcloud config set project
-   YOUR_PROJECT` to the ID of your application.
 1. Run `mvn spring-boot:run`
 1. Visit http://localhost:8080
 
