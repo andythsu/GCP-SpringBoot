@@ -1,5 +1,3 @@
-SpringBoot
-
 ## Run the application locally
 
 1. Set the correct Cloud SDK project via `gcloud config set project
