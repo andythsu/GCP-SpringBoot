@@ -1,10 +1,10 @@
 package com.example.SpringBoot.Controllers;
 
-import com.example.SpringBoot.DataStoreService;
+import com.example.SpringBoot.Services.DataStoreService;
 import com.google.cloud.datastore.Entity;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Iterator;
@@ -17,21 +17,15 @@ import java.util.Iterator;
 @RestController
 public class Setting {
 
-    Logger log = LoggerFactory.getLogger(Setting.class);
+    @Autowired
+    public DataStoreService db;
 
-    public DataStoreService db = new DataStoreService();
 
-
-//    @Autowired
-//    public Greeting(DataStoreService db){
-//        this.db = db;
-//    }
-
-    @GetMapping("/setting.json")
+    @RequestMapping(value = "/settings.json", method = RequestMethod.GET)
     public String getSetting() {
-        Iterator<Entity> entityIterator = db.getSettingJson();
+        Iterator<Entity> entityIterator = db.getAllByKind("setting");
         String json = "";
-        while(entityIterator.hasNext()){
+        while (entityIterator.hasNext()) {
             Entity en = entityIterator.next();
             json = String.valueOf(en.getString("json"));
         }
