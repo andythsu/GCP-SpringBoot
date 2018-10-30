@@ -1,9 +1,9 @@
 package com.example.SpringBoot.Controllers;
 
-import com.example.SpringBoot.MessageKey;
+import com.example.SpringBoot.Error.MessageKey;
 import com.example.SpringBoot.Services.DataStoreService;
 import com.example.SpringBoot.Services.UtilService;
-import com.example.SpringBoot.WebRequestError;
+import com.example.SpringBoot.Error.WebRequestException;
 import com.google.cloud.datastore.Entity;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.net.HttpURLConnection;
 import java.util.Iterator;
 
 /**
@@ -40,17 +41,23 @@ public class Setting {
     public UtilService util;
 
     @RequestMapping(value = "/settings.json", method = RequestMethod.PATCH)
-    public String updateSetting(@RequestBody String body) throws WebRequestError {
+    public String updateSetting(@RequestBody String body) {
+
         JSONObject source = util.parseToJSON(body);
         if (source == null){
-            throw new WebRequestError(new MessageKey("Not a valid json", HttpStatus.BAD_REQUEST));
+            throw new WebRequestException(MessageKey.INVALID_JSON);
         }
 
         JSONObject target;
         try{
             target = new JSONObject(getSetting());
         }catch(JSONException | NullPointerException e){
-            throw new WebRequestError(new MessageKey("Error fetching old data", HttpStatus.INTERNAL_SERVER_ERROR));
+            MessageKey msg = MessageKey.Builder()
+                    .buildMessage("Error fetching data")
+                    .buildStatus(HttpURLConnection.HTTP_INTERNAL_ERROR)
+                    .buildTag(MessageKey.MessageKeyTags.DATA_ERROR)
+                    .build();
+            throw new WebRequestException(msg);
         }
 
         target = util.deepMergeJSON(source, target);
@@ -59,10 +66,10 @@ public class Setting {
     }
 
     @RequestMapping(value = "/settings.json", method = RequestMethod.POST)
-    public String postSetting(@RequestBody String body) throws WebRequestError {
+    public String postSetting(@RequestBody String body) {
         JSONObject source = util.parseToJSON(body);
         if (source == null){
-            throw new WebRequestError(new MessageKey("Not a valid json", HttpStatus.BAD_REQUEST));
+            throw new WebRequestException(MessageKey.INVALID_JSON);
         }
         return db.saveByKind(SETTING_KIND, source.toString());
     }
@@ -72,7 +79,7 @@ public class Setting {
     public String getSetting() {
         Iterator<Entity> entityIterator = db.getLastCreatedByKind(SETTING_KIND);
         String json = "";
-        // gets the first thing in the iterator since it's already sorted by latest time
+        // iterator will only contain 1 element (latest)
         while (entityIterator.hasNext()) {
             Entity en = entityIterator.next();
             json = String.valueOf(en.getString("json"));

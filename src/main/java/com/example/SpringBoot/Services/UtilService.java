@@ -1,11 +1,9 @@
 package com.example.SpringBoot.Services;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
-import java.util.Iterator;
 
 @Component
 public class UtilService {

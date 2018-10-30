@@ -19,8 +19,7 @@ public class DataStoreService {
 
     private final String JSON = "json";
 
-    private final Datastore datastore =
-            DatastoreOptions.getDefaultInstance().getService();
+    private final Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
 
     private final KeyFactory keyFactory = datastore.newKeyFactory();
 
