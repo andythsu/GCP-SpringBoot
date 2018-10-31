@@ -15,9 +15,9 @@ public class DataStoreService {
 
     private Logger log = LoggerFactory.getLogger(DataStoreService.class);
 
-    private final String CREATEDAT = "createdAt";
+    private final String CREATEDAT = "CreatedAt";
 
-    private final String JSON = "json";
+    private final String JSON = "Json";
 
     private final Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
 
