@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import java.text.MessageFormat;
 
 
-public class WebRequestException extends RuntimeException {
+public class WebRequestException extends RuntimeException{
 
     private final Logger logger = LoggerFactory.getLogger(WebRequestException.class);
 
