@@ -1,12 +1,12 @@
 package com.example.SpringBoot;
 
-import Services.DatastoreService;
-import Services.UtilService;
 import com.example.SpringBoot.Error.MessageKey;
 
 import com.example.SpringBoot.Error.WebRequestException;
 import com.google.cloud.Timestamp;
 import com.google.cloud.datastore.Entity;
+import org.github.andythsu.GCP.Services.DatastoreService;
+import org.github.andythsu.GCP.Services.UtilService;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
