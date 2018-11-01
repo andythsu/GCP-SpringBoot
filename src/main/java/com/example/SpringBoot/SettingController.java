@@ -1,8 +1,8 @@
 package com.example.SpringBoot;
 
-import com.example.SpringBoot.Error.MessageKey;
+import org.github.andythsu.GCP.Services.Error.MessageKey;
 
-import com.example.SpringBoot.Error.WebRequestException;
+import org.github.andythsu.GCP.Services.Error.WebRequestException;
 import com.google.cloud.Timestamp;
 import com.google.cloud.datastore.Entity;
 import org.github.andythsu.GCP.Services.DatastoreService;
@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import java.net.HttpURLConnection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;

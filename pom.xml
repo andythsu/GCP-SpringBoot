@@ -28,12 +28,14 @@
         <java.version>1.8</java.version>
 	</properties>
 
+	<!--jitpack-->
 	<repositories>
 		<repository>
 			<id>jitpack.io</id>
 			<url>https://jitpack.io</url>
 		</repository>
 	</repositories>
+	<!--end-->
 
 	<dependencies>
 		<dependency>
@@ -85,7 +87,7 @@
 		<dependency>
 			<groupId>com.github.andythsu</groupId>
 			<artifactId>SpringBoot-Lib</artifactId>
-			<version>1.0.3</version>
+			<version>1.1.0</version>
 		</dependency>
 
 	</dependencies>
