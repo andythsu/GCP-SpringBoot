@@ -3,6 +3,7 @@ package com.example.SpringBoot.Error;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 /**
@@ -10,14 +11,14 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
  * @Date: 10/31/2018
  */
 @ControllerAdvice
-public class ExceptionHandler extends ResponseEntityExceptionHandler {
+public class ExceptionHandler extends ExceptionHandlerExceptionResolver {
 
     @org.springframework.web.bind.annotation.ExceptionHandler(WebRequestException.class)
-    protected ResponseEntity<Object> handleException(WebRequestException ex) {
+    protected ResponseEntity<WebRequestException> handleException(WebRequestException ex) {
         return buildResponseEntity(ex);
     }
 
-    private ResponseEntity<Object> buildResponseEntity(Object ex) {
-        return new ResponseEntity<>(ex, HttpStatus.resolve(((WebRequestException) ex).getStatus()));
+    private ResponseEntity<WebRequestException> buildResponseEntity(WebRequestException ex) {
+        return new ResponseEntity<>(ex, HttpStatus.resolve(ex.getStatus()));
     }
 }

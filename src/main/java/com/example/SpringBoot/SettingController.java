@@ -4,6 +4,7 @@ import com.example.SpringBoot.Error.MessageKey;
 import com.example.SpringBoot.Services.DataStoreService;
 import com.example.SpringBoot.Services.UtilService;
 import com.example.SpringBoot.Error.WebRequestException;
+import com.google.cloud.Timestamp;
 import com.google.cloud.datastore.Entity;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,8 +18,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.rmi.CORBA.Util;
 import java.net.HttpURLConnection;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 /**
  * @author: Andy Su
@@ -33,16 +37,14 @@ public class SettingController {
 
     private final String SETTING_KIND = "setting";
 
-    @Autowired
-    public DataStoreService db;
+    public UtilService.commonNames commonNames;
 
-    @Autowired
-    public UtilService util;
+    public DataStoreService db;
 
     @RequestMapping(value = "/settings.json", method = RequestMethod.PATCH)
     public String updateSetting(@RequestBody String body) {
 
-        JSONObject source = util.parseToJSON(body);
+        JSONObject source = UtilService.parseToJSON(body);
         if (source == null){
             throw new WebRequestException(MessageKey.INVALID_JSON);
         }
@@ -59,18 +61,24 @@ public class SettingController {
             throw new WebRequestException(msg);
         }
 
-        target = util.deepMergeJSON(source, target);
+        target = UtilService.deepMergeJSON(source, target);
 
-        return db.saveByKind(SETTING_KIND, target.toString());
+        Map<String, Object> data = new HashMap<>();
+        data.put(commonNames.JSON, target.toString());
+
+        return db.saveByKind(SETTING_KIND, data);
     }
 
     @RequestMapping(value = "/settings.json", method = RequestMethod.POST)
     public String postSetting(@RequestBody String body) {
-        JSONObject source = util.parseToJSON(body);
+        JSONObject source = UtilService.parseToJSON(body);
         if (source == null){
             throw new WebRequestException(MessageKey.INVALID_JSON);
         }
-        return db.saveByKind(SETTING_KIND, source.toString());
+        Map<String, Object> data = new HashMap<>();
+        data.put(commonNames.JSON, source.toString());
+        data.put(commonNames.CREATEDAT, Timestamp.now());
+        return db.saveByKind(SETTING_KIND, data);
     }
 
 
@@ -81,7 +89,7 @@ public class SettingController {
         // iterator will only contain 1 element (latest)
         while (entityIterator.hasNext()) {
             Entity en = entityIterator.next();
-            json = String.valueOf(en.getString("json"));
+            json = String.valueOf(en.getString(commonNames.JSON));
         }
         return json;
     }

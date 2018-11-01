@@ -2,12 +2,17 @@ package com.example.SpringBoot.Services;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.springframework.stereotype.Component;
 
 
-@Component
 public class UtilService {
-    public JSONObject parseToJSON(String json) {
+
+    public class commonNames{
+        public static final String JSON = "Json";
+        public static final String CREATEDAT = "CreatedAt";
+        public static final String EXPIREDAT = "ExpiredAt";
+    }
+
+    public static JSONObject parseToJSON(String json) {
         try {
             return new JSONObject(json);
         } catch (JSONException e) {
@@ -20,7 +25,7 @@ public class UtilService {
         }
     }
 
-    public JSONObject deepMergeJSON(JSONObject source, JSONObject target) throws JSONException {
+    public static JSONObject deepMergeJSON(JSONObject source, JSONObject target) throws JSONException {
         for (String key : JSONObject.getNames(source)) {
             Object source_value = source.get(key);
             if (!target.has(key)) {
@@ -41,4 +46,5 @@ public class UtilService {
         }
         return target;
     }
+
 }

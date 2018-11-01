@@ -5,50 +5,67 @@ import com.google.cloud.datastore.*;
 import com.google.cloud.datastore.StructuredQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 
 
 import java.util.Iterator;
+import java.util.Map;
 
-@Component
 public class DataStoreService {
 
     private Logger log = LoggerFactory.getLogger(DataStoreService.class);
 
-    private final String CREATEDAT = "CreatedAt";
+    private static final Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
 
-    private final String JSON = "Json";
+    private static final KeyFactory keyFactory = datastore.newKeyFactory();
 
-    private final Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
+    private static UtilService.commonNames commonNames;
 
-    private final KeyFactory keyFactory = datastore.newKeyFactory();
-
-    public Iterator<Entity> getAllByKind(String kind) {
+    public static Iterator<Entity> getAllByKind(String kind) {
         Query<Entity> query = Query.newEntityQueryBuilder()
                 .setKind(kind)
                 .build();
         return datastore.run(query);
     }
 
-    public Iterator<Entity> getLastCreatedByKind(String kind){
+    public static Iterator<Entity> getLastCreatedByKind(String kind){
         Query<Entity> query = Query.newEntityQueryBuilder()
                 .setKind(kind)
-                .setOrderBy(StructuredQuery.OrderBy.desc(CREATEDAT))
+                .setOrderBy(StructuredQuery.OrderBy.desc(commonNames.CREATEDAT))
                 .setLimit(1)
                 .build();
         return datastore.run(query);
     }
 
-    public String saveByKind(String kind, String data){
+    public static String saveByKind(String kind, Map<String, Object> data){
         keyFactory.setKind(kind);
         Key taskKey = datastore.allocateId(keyFactory.newKey());
-        FullEntity entity = FullEntity.newBuilder(taskKey)
-                .set(JSON, data)
-                .set(CREATEDAT, Timestamp.now())
-                .build();
-        Key insertedKey = datastore.add(entity).getKey();
-        return insertedKey.toString();
+        FullEntity.Builder entity = FullEntity.newBuilder(taskKey);
 
+        /* map data */
+        entity = mapEntity(entity, data);
+
+        Key insertedKey = datastore.add(entity.build()).getKey();
+        return insertedKey.toString();
     }
+
+    private static FullEntity.Builder mapEntity(FullEntity.Builder entity, Map<String, Object> data){
+        for (String key : data.keySet()) {
+            Object value = data.get(key);
+            if (value instanceof String) {
+                entity.set(key, (String) value);
+            } else if (value instanceof Integer) {
+                entity.set(key, (Integer) value);
+            } else if (value instanceof Long) {
+                entity.set(key, (Long) value);
+            } else if (value instanceof Double) {
+                entity.set(key, (Double) value);
+            } else if (value instanceof Timestamp) {
+                entity.set(key, (Timestamp) value);
+            }
+        }
+        return entity;
+    }
+
+
 
 }

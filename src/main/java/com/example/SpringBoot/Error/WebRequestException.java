@@ -41,16 +41,16 @@ public class WebRequestException extends RuntimeException{
     }
 
 
-    @Override
-    public String getMessage() {
-        return new StringBuilder()
-                .append("Status: ").append(status)
-                .append(" - ")
-                .append("Key: ").append(key)
-                .append(" - ")
-                .append("Default Message: ").append(defaultMessage)
-                .toString();
-    }
+//    @Override
+//    public String getMessage() {
+//        return new StringBuilder()
+//                .append("Status: ").append(status)
+//                .append(" - ")
+//                .append("Key: ").append(key)
+//                .append(" - ")
+//                .append("Default Message: ").append(defaultMessage)
+//                .toString();
+//    }
 
     public int getStatus() {
         return status;
