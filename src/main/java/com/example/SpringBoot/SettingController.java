@@ -51,12 +51,7 @@ public class SettingController {
         try{
             target = new JSONObject(getSetting());
         }catch(JSONException | NullPointerException e){
-            MessageKey msg = MessageKey.Builder()
-                    .buildMessage("Error fetching data")
-                    .buildStatus(HttpURLConnection.HTTP_INTERNAL_ERROR)
-                    .buildTag(MessageKey.MessageKeyTags.DATA_ERROR)
-                    .build();
-            throw new WebRequestException(msg);
+            throw new WebRequestException(MessageKey.DATA_FETCH_ERROR);
         }
 
         target = UtilService.deepMergeJSON(source, target);
