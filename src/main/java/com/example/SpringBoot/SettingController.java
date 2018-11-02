@@ -1,13 +1,11 @@
 package com.example.SpringBoot;
 
-import org.github.andythsu.GCP.Services.Error.MessageKey;
-
-import org.github.andythsu.GCP.Services.Error.WebRequestException;
 import com.google.cloud.Timestamp;
 import com.google.cloud.datastore.Entity;
 import org.github.andythsu.GCP.Services.DatastoreService;
+import org.github.andythsu.GCP.Services.Error.MessageKey;
+import org.github.andythsu.GCP.Services.Error.WebRequestException;
 import org.github.andythsu.GCP.Services.UtilService;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,28 +36,28 @@ public class SettingController {
 
     public DatastoreService db;
 
-    @RequestMapping(value = "/settings.json", method = RequestMethod.PATCH)
-    public String updateSetting(@RequestBody String body) {
-
-        JSONObject source = UtilService.parseToJSON(body);
-        if (source == null){
-            throw new WebRequestException(MessageKey.INVALID_JSON);
-        }
-
-        JSONObject target;
-        try{
-            target = new JSONObject(getSetting());
-        }catch(JSONException | NullPointerException e){
-            throw new WebRequestException(MessageKey.DATA_FETCH_ERROR);
-        }
-
-        target = UtilService.deepMergeJSON(source, target);
-
-        Map<String, Object> data = new HashMap<>();
-        data.put(commonNames.JSON, target.toString());
-
-        return db.saveByKind(SETTING_KIND, data);
-    }
+//    @RequestMapping(value = "/settings.json", method = RequestMethod.PATCH)
+//    public String updateSetting(@RequestBody String body) {
+//
+//        JSONObject source = UtilService.parseToJSON(body);
+//        if (source == null){
+//            throw new WebRequestException(MessageKey.INVALID_JSON);
+//        }
+//
+//        JSONObject target;
+//        try{
+//            target = new JSONObject(getSetting());
+//        }catch(JSONException | NullPointerException e){
+//            throw new WebRequestException(MessageKey.DATA_FETCH_ERROR);
+//        }
+//
+//        target = UtilService.deepMergeJSON(source, target);
+//
+//        Map<String, Object> data = new HashMap<>();
+//        data.put(commonNames.JSON, target.toString());
+//
+//        return db.saveByKind(SETTING_KIND, data);
+//    }
 
     @RequestMapping(value = "/settings.json", method = RequestMethod.POST)
     public String postSetting(@RequestBody String body) {
