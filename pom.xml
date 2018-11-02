@@ -87,7 +87,7 @@
 		<dependency>
 			<groupId>com.github.andythsu</groupId>
 			<artifactId>SpringBoot-Lib</artifactId>
-			<version>1.3.0</version>
+			<version>1.3.1</version>
 		</dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>

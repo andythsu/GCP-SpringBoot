@@ -19,17 +19,17 @@ import java.util.Map;
 public class AuthController {
     private Logger log = LoggerFactory.getLogger(AuthController.class);
     public static String AUTH_KIND = "auth";
+    public static String TOKEN_COL = "Token";
 
     @RequestMapping(value = "/auth/signin", method = RequestMethod.POST)
     public void getToken(){
-        String token_col = "Token";
         AuthToken token = TokenUtil.acqureToken();
 
         // save to db
         Map<String, Object> data = new HashMap<>();
         data.put(UtilService.commonNames.CREATEDAT, token.getCreatedAt());
         data.put(UtilService.commonNames.EXPIREDAT, token.getExpiredAt());
-        data.put(token_col, token.getToken());
+        data.put(TOKEN_COL, token.getToken());
         DatastoreService.saveByKind(AUTH_KIND, data);
         // send email to user
         String body = new StringBuilder()
