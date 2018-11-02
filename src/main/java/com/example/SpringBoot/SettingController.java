@@ -2,7 +2,8 @@ package com.example.SpringBoot;
 
 import com.google.cloud.Timestamp;
 import com.google.cloud.datastore.Entity;
-import org.github.andythsu.GCP.Services.DatastoreService;
+import org.github.andythsu.GCP.Services.Datastore.DatastoreData;
+import org.github.andythsu.GCP.Services.Datastore.DatastoreService;
 import org.github.andythsu.GCP.Services.Error.MessageKey;
 import org.github.andythsu.GCP.Services.Error.WebRequestException;
 import org.github.andythsu.GCP.Services.UtilService;
@@ -65,10 +66,10 @@ public class SettingController {
         if (source == null){
             throw new WebRequestException(MessageKey.INVALID_JSON);
         }
-        Map<String, Object> data = new HashMap<>();
-        data.put(commonNames.JSON, source.toString());
-        data.put(commonNames.CREATEDAT, Timestamp.now());
-        return db.saveByKind(SETTING_KIND, data);
+        DatastoreData dd = new DatastoreData();
+        dd.put(commonNames.JSON, source.toString());
+        dd.put(commonNames.CREATEDAT, Timestamp.now());
+        return db.saveByKind(SETTING_KIND, dd, null);
     }
 
 

@@ -1,6 +1,7 @@
 package com.example.SpringBoot;
 
-import org.github.andythsu.GCP.Services.DatastoreService;
+import org.github.andythsu.GCP.Services.Datastore.DatastoreData;
+import org.github.andythsu.GCP.Services.Datastore.DatastoreService;
 import org.github.andythsu.GCP.Services.Email.Mail;
 import org.github.andythsu.GCP.Services.Email.MailContent;
 import org.github.andythsu.GCP.Services.Token.AuthToken;
@@ -12,8 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
-import java.util.Map;
 
 @RestController
 public class AuthController {
@@ -26,11 +25,11 @@ public class AuthController {
         AuthToken token = TokenUtil.acqureToken();
 
         // save to db
-        Map<String, Object> data = new HashMap<>();
-        data.put(UtilService.commonNames.CREATEDAT, token.getCreatedAt());
-        data.put(UtilService.commonNames.EXPIREDAT, token.getExpiredAt());
-        data.put(TOKEN_COL, token.getToken());
-        DatastoreService.saveByKind(AUTH_KIND, data);
+        DatastoreData dd = new DatastoreData();
+        dd.put(UtilService.commonNames.CREATEDAT, token.getCreatedAt());
+        dd.put(UtilService.commonNames.EXPIREDAT, token.getExpiredAt());
+        dd.put(TOKEN_COL, token.getToken());
+        DatastoreService.saveByKind(AUTH_KIND, dd, null);
         // send email to user
         String body = new StringBuilder()
                 .append("Token: ")
