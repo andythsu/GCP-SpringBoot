@@ -9,6 +9,7 @@ import org.github.andythsu.GCP.Services.Token.TokenUtil;
 import org.github.andythsu.GCP.Services.UtilService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,10 +21,13 @@ public class AuthController {
     public static String AUTH_KIND = "auth";
     public static String TOKEN_COL = "Token";
 
+    @Autowired
+    TokenSession tokenSession;
+
     @RequestMapping(value = "/auth/signin", method = RequestMethod.POST)
     public void getToken(){
         AuthToken token = TokenUtil.acqureToken();
-
+        tokenSession.setSession(token.getToken(), token);
         // save to db
         DatastoreData dd = new DatastoreData();
         dd.put(UtilService.commonNames.CREATEDAT, token.getCreatedAt());

@@ -6,19 +6,18 @@ import org.github.andythsu.GCP.Services.Datastore.DatastoreData;
 import org.github.andythsu.GCP.Services.Datastore.DatastoreService;
 import org.github.andythsu.GCP.Services.Error.MessageKey;
 import org.github.andythsu.GCP.Services.Error.WebRequestException;
+import org.github.andythsu.GCP.Services.Token.AuthToken;
 import org.github.andythsu.GCP.Services.UtilService;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-import java.util.HashMap;
+import org.springframework.web.bind.annotation.*;
+
+import java.net.HttpURLConnection;
 import java.util.Iterator;
-import java.util.Map;
 
 /**
  * @author: Andy Su
@@ -37,6 +36,7 @@ public class SettingController {
 
     public DatastoreService db;
 
+    public TokenSession tokenSession;
 //    @RequestMapping(value = "/settings.json", method = RequestMethod.PATCH)
 //    public String updateSetting(@RequestBody String body) {
 //
@@ -74,7 +74,15 @@ public class SettingController {
 
 
     @RequestMapping(value = "/settings.json", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public String getSetting() {
+    public String getSetting(@RequestHeader(value="token") String token) {
+
+        AuthToken authToken = TokenSession.getToken(token);
+        if (authToken == null){
+            throw new WebRequestException(new AuthMessageKey(HttpURLConnection.HTTP_UNAUTHORIZED, "Not a valid token"));
+        }
+
+
+
         Iterator<Entity> entityIterator = db.getLastCreatedByKind(SETTING_KIND);
         String json = "";
         // iterator will only contain 1 element (latest)
