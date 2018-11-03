@@ -1,17 +1,26 @@
-package com.example.SpringBoot;
+package com.example.SpringBoot.SettingREST;
 
+import Services.Datastore.DatastoreData;
+import Services.Datastore.DatastoreService;
+import Services.Error.MessageKey;
+import Services.Error.WebRequestException;
+import Services.Token.AuthToken;
+import Services.Token.TokenSession;
+import Services.UtilService;
+import com.example.SpringBoot.AuthREST.AuthMessageKey;
 import com.google.cloud.Timestamp;
-import com.google.cloud.datastore.Entity;
-import org.github.andythsu.GCP.Services.Datastore.DatastoreData;
-import org.github.andythsu.GCP.Services.Datastore.DatastoreService;
-import org.github.andythsu.GCP.Services.Error.MessageKey;
-import org.github.andythsu.GCP.Services.Error.WebRequestException;
-import org.github.andythsu.GCP.Services.Token.AuthToken;
-import org.github.andythsu.GCP.Services.UtilService;
+//import com.google.cloud.datastore.Entity;
+//import org.github.andythsu.GCP.Services.Datastore.DatastoreData;
+//import org.github.andythsu.GCP.Services.Datastore.DatastoreService;
+//import org.github.andythsu.GCP.Services.Error.MessageKey;
+//import org.github.andythsu.GCP.Services.Error.WebRequestException;
+//import org.github.andythsu.GCP.Services.Token.AuthToken;
+//import org.github.andythsu.GCP.Services.Token.TokenSession;
+//import org.github.andythsu.GCP.Services.UtilService;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
@@ -36,7 +45,9 @@ public class SettingController {
 
     public DatastoreService db;
 
+    @Autowired
     public TokenSession tokenSession;
+
 //    @RequestMapping(value = "/settings.json", method = RequestMethod.PATCH)
 //    public String updateSetting(@RequestBody String body) {
 //
@@ -76,20 +87,22 @@ public class SettingController {
     @RequestMapping(value = "/settings.json", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public String getSetting(@RequestHeader(value="token") String token) {
 
-        AuthToken authToken = TokenSession.getToken(token);
+        AuthToken authToken = tokenSession.getToken(token);
         if (authToken == null){
             throw new WebRequestException(new AuthMessageKey(HttpURLConnection.HTTP_UNAUTHORIZED, "Not a valid token"));
+        }else{
+            return authToken.getExpiredAt().toString();
         }
 
 
 
-        Iterator<Entity> entityIterator = db.getLastCreatedByKind(SETTING_KIND);
-        String json = "";
-        // iterator will only contain 1 element (latest)
-        while (entityIterator.hasNext()) {
-            Entity en = entityIterator.next();
-            json = String.valueOf(en.getString(commonNames.JSON));
-        }
-        return json;
+//        Iterator<Entity> entityIterator = db.getLastCreatedByKind(SETTING_KIND);
+//        String json = "";
+//        // iterator will only contain 1 element (latest)
+//        while (entityIterator.hasNext()) {
+//            Entity en = entityIterator.next();
+//            json = String.valueOf(en.getString(commonNames.JSON));
+//        }
+//        return json;
     }
 }

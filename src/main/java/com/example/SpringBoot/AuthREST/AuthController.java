@@ -1,12 +1,17 @@
-package com.example.SpringBoot;
+package com.example.SpringBoot.AuthREST;
 
-import org.github.andythsu.GCP.Services.Datastore.DatastoreData;
-import org.github.andythsu.GCP.Services.Datastore.DatastoreService;
-import org.github.andythsu.GCP.Services.Email.Mail;
-import org.github.andythsu.GCP.Services.Email.MailContent;
-import org.github.andythsu.GCP.Services.Token.AuthToken;
-import org.github.andythsu.GCP.Services.Token.TokenUtil;
-import org.github.andythsu.GCP.Services.UtilService;
+//import org.github.andythsu.GCP.Services.Datastore.DatastoreData;
+//import org.github.andythsu.GCP.Services.Datastore.DatastoreService;
+//import org.github.andythsu.GCP.Services.Email.Mail;
+//import org.github.andythsu.GCP.Services.Email.MailContent;
+//import org.github.andythsu.GCP.Services.Token.AuthToken;
+//import org.github.andythsu.GCP.Services.Token.TokenUtil;
+//import org.github.andythsu.GCP.Services.UtilService;
+import Services.Datastore.DatastoreData;
+import Services.Datastore.DatastoreService;
+import Services.Token.AuthToken;
+import Services.Token.TokenUtil;
+import Services.UtilService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +27,11 @@ public class AuthController {
     public static String TOKEN_COL = "Token";
 
     @Autowired
-    TokenSession tokenSession;
+    TokenUtil tokenUtil;
 
     @RequestMapping(value = "/auth/signin", method = RequestMethod.POST)
     public void getToken(){
-        AuthToken token = TokenUtil.acqureToken();
-        tokenSession.setSession(token.getToken(), token);
+        AuthToken token = tokenUtil.acqureToken();
         // save to db
         DatastoreData dd = new DatastoreData();
         dd.put(UtilService.commonNames.CREATEDAT, token.getCreatedAt());
@@ -42,8 +46,8 @@ public class AuthController {
                 .append("Expiry Date: ")
                 .append(token.getExpiredAtTime())
                 .toString();
-        MailContent mailContent = new MailContent().subject("Token").body(body);
-        Mail.sendEmail(mailContent);
+//        MailContent mailContent = new MailContent().subject("Token").body(body);
+//        Mail.sendEmail(mailContent);
     }
 
 }

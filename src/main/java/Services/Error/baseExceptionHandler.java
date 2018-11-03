@@ -1,11 +1,9 @@
-package org.github.andythsu.GCP.Services.Error;
+package Services.Error;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author: Andy Su
