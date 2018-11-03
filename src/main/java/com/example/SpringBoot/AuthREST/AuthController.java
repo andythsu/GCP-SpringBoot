@@ -1,12 +1,12 @@
 package com.example.SpringBoot.AuthREST;
 
+
 import org.github.andythsu.GCP.Services.Datastore.DatastoreData;
 import org.github.andythsu.GCP.Services.Datastore.DatastoreService;
 import org.github.andythsu.GCP.Services.Email.Mail;
 import org.github.andythsu.GCP.Services.Email.MailContent;
 import org.github.andythsu.GCP.Services.Token.AuthToken;
 import org.github.andythsu.GCP.Services.Token.TokenUtil;
-import com.example.SpringBoot.DatastoreColumns;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +29,8 @@ public class AuthController {
         AuthToken token = tokenUtil.acqureToken();
         // save to db
         DatastoreData dd = new DatastoreData();
-        dd.put(DatastoreColumns.CREATEDAT, token.getCreatedAt());
-        dd.put(DatastoreColumns.EXPIREDAT, token.getExpiredAt());
+        dd.put(DatastoreService.DatastoreColumns.CREATEDAT, token.getCreatedAt());
+        dd.put(DatastoreService.DatastoreColumns.EXPIREDAT, token.getExpiredAt());
         dd.put(TOKEN_COL, token.getToken());
         DatastoreService.saveByKind(AUTH_KIND, dd, null);
         // send email to user
@@ -41,7 +41,7 @@ public class AuthController {
                 .append("Expiry Date: ")
                 .append(token.getExpiredAtTime())
                 .toString();
-        MailContent mailContent = new MailContent().subject("Token").body(body);
+        MailContent mailContent = new MailContent().subject("Token").body("dd");
         Mail.sendEmail(mailContent);
     }
 

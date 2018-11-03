@@ -7,8 +7,8 @@ import org.github.andythsu.GCP.Services.Datastore.DatastoreService;
 import org.github.andythsu.GCP.Services.Error.MessageKey;
 import org.github.andythsu.GCP.Services.Error.WebRequestException;
 import org.github.andythsu.GCP.Services.Token.TokenSession;
-import org.github.andythsu.GCP.Services.UtilService;
 import org.github.andythsu.GCP.Services.Token.TokenUtil;
+import org.github.andythsu.GCP.Services.UtilService;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +17,6 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.HttpURLConnection;
 import java.util.Iterator;
 
 /**
