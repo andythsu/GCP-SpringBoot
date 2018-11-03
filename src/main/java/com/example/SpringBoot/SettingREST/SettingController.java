@@ -1,4 +1,4 @@
-package com.example.SpringBoot;
+package com.example.SpringBoot.SettingREST;
 
 import com.google.cloud.Timestamp;
 import com.google.cloud.datastore.Entity;
@@ -6,19 +6,19 @@ import org.github.andythsu.GCP.Services.Datastore.DatastoreData;
 import org.github.andythsu.GCP.Services.Datastore.DatastoreService;
 import org.github.andythsu.GCP.Services.Error.MessageKey;
 import org.github.andythsu.GCP.Services.Error.WebRequestException;
+import org.github.andythsu.GCP.Services.Token.TokenSession;
 import org.github.andythsu.GCP.Services.UtilService;
+import org.github.andythsu.GCP.Services.Token.TokenUtil;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-import java.util.HashMap;
+import org.springframework.web.bind.annotation.*;
+
+import java.net.HttpURLConnection;
 import java.util.Iterator;
-import java.util.Map;
 
 /**
  * @author: Andy Su
@@ -33,9 +33,13 @@ public class SettingController {
 
     private final String SETTING_KIND = "setting";
 
-    public UtilService.commonNames commonNames;
-
     public DatastoreService db;
+
+    @Autowired
+    private TokenSession tokenSession;
+
+    @Autowired
+    private TokenUtil tokenUtil;
 
 //    @RequestMapping(value = "/settings.json", method = RequestMethod.PATCH)
 //    public String updateSetting(@RequestBody String body) {
@@ -67,21 +71,26 @@ public class SettingController {
             throw new WebRequestException(MessageKey.INVALID_JSON);
         }
         DatastoreData dd = new DatastoreData();
-        dd.put(commonNames.JSON, source.toString());
-        dd.put(commonNames.CREATEDAT, Timestamp.now());
+        dd.put(DatastoreService.DatastoreColumns.JSON, source.toString());
+        dd.put(DatastoreService.DatastoreColumns.CREATEDAT, Timestamp.now());
         return db.saveByKind(SETTING_KIND, dd, null);
     }
 
 
     @RequestMapping(value = "/settings.json", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public String getSetting() {
+    public String getSetting(@RequestHeader(value="token") String token) {
+
+        tokenUtil.validateToken(token);
+
         Iterator<Entity> entityIterator = db.getLastCreatedByKind(SETTING_KIND);
         String json = "";
         // iterator will only contain 1 element (latest)
         while (entityIterator.hasNext()) {
             Entity en = entityIterator.next();
-            json = String.valueOf(en.getString(commonNames.JSON));
+            json = String.valueOf(en.getString(DatastoreService.DatastoreColumns.JSON));
         }
         return json;
     }
+
+
 }

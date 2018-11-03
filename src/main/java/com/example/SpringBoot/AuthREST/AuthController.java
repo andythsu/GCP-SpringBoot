@@ -1,4 +1,4 @@
-package com.example.SpringBoot;
+package com.example.SpringBoot.AuthREST;
 
 import org.github.andythsu.GCP.Services.Datastore.DatastoreData;
 import org.github.andythsu.GCP.Services.Datastore.DatastoreService;
@@ -6,9 +6,10 @@ import org.github.andythsu.GCP.Services.Email.Mail;
 import org.github.andythsu.GCP.Services.Email.MailContent;
 import org.github.andythsu.GCP.Services.Token.AuthToken;
 import org.github.andythsu.GCP.Services.Token.TokenUtil;
-import org.github.andythsu.GCP.Services.UtilService;
+import com.example.SpringBoot.DatastoreColumns;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,14 +21,16 @@ public class AuthController {
     public static String AUTH_KIND = "auth";
     public static String TOKEN_COL = "Token";
 
+    @Autowired
+    TokenUtil tokenUtil;
+
     @RequestMapping(value = "/auth/signin", method = RequestMethod.POST)
     public void getToken(){
-        AuthToken token = TokenUtil.acqureToken();
-
+        AuthToken token = tokenUtil.acqureToken();
         // save to db
         DatastoreData dd = new DatastoreData();
-        dd.put(UtilService.commonNames.CREATEDAT, token.getCreatedAt());
-        dd.put(UtilService.commonNames.EXPIREDAT, token.getExpiredAt());
+        dd.put(DatastoreColumns.CREATEDAT, token.getCreatedAt());
+        dd.put(DatastoreColumns.EXPIREDAT, token.getExpiredAt());
         dd.put(TOKEN_COL, token.getToken());
         DatastoreService.saveByKind(AUTH_KIND, dd, null);
         // send email to user
