@@ -1,65 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.example</groupId>
-	<artifactId>SpringBoot</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
+    <groupId>com.example</groupId>
+    <artifactId>SpringBoot</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
 
-	<name>SpringBoot</name>
-	<description>Google Cloud App Engine Spring</description>
+    <name>SpringBoot</name>
+    <description>Google Cloud App Engine Spring</description>
 
 
-	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.0.6.RELEASE</version>
-		<relativePath/> <!-- lookup parent from repository -->
-	</parent>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.0.6.RELEASE</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <gcp.projectId>andyproject-220200</gcp.projectId>
         <gcp.appengine.maven.plugin>1.3.2</gcp.appengine.maven.plugin>
         <gcp.library>1.48.0</gcp.library>
         <java.version>1.8</java.version>
-	</properties>
+    </properties>
 
-	<!--jitpack-->
-	<repositories>
-		<repository>
-			<id>jitpack.io</id>
-			<url>https://jitpack.io</url>
-		</repository>
-	</repositories>
-	<!--end-->
+    <!--jitpack-->
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
+    <!--end-->
 
-	<dependencies>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
 
-		<!--compatibility with Google App Engine-->
+        <!--compatibility with Google App Engine-->
 
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>
-			<version>3.1.0</version>
-			<scope>provided</scope>
-		</dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.1.0</version>
+            <scope>provided</scope>
+        </dependency>
 
         <!--end-->
 
         <!--google cloud library -->
-		<dependency>
-			<groupId>com.google.cloud</groupId>
-			<artifactId>google-cloud-storage</artifactId>
-			<version>${gcp.library}</version>
-		</dependency>
+        <dependency>
+            <groupId>com.google.cloud</groupId>
+            <artifactId>google-cloud-storage</artifactId>
+            <version>${gcp.library}</version>
+        </dependency>
 
         <!--end-->
 
@@ -71,44 +71,44 @@
         </dependency>
         <!--end-->
 
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
 
-		<!-- https://mvnrepository.com/artifact/org.json/json -->
-		<dependency>
-			<groupId>org.json</groupId>
-			<artifactId>json</artifactId>
-			<version>20160810</version>
-		</dependency>
-
-		<!--<dependency>-->
-			<!--<groupId>com.github.andythsu</groupId>-->
-			<!--<artifactId>SpringBoot-Lib</artifactId>-->
-			<!--<version>1.4.1</version>-->
-		<!--</dependency>-->
-
-		<!--temp dependencies-->
-		<!-- https://mvnrepository.com/artifact/com.google.appengine/appengine-api-1.0-sdk -->
-		<!--<dependency>-->
-			<!--<groupId>com.google.appengine</groupId>-->
-			<!--<artifactId>appengine-api-1.0-sdk</artifactId>-->
-			<!--<version>1.9.64</version>-->
-		<!--</dependency>-->
+        <!-- https://mvnrepository.com/artifact/org.json/json -->
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20160810</version>
+        </dependency>
 
         <dependency>
-            <groupId>javax.mail</groupId>
-            <artifactId>mail</artifactId>
-            <version>1.4.7</version>
+            <groupId>com.github.andythsu</groupId>
+            <artifactId>SpringBoot-Lib</artifactId>
+            <version>1.5.0</version>
         </dependency>
-        <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
-            <version>2.5</version>
-        </dependency>
-<!--end-->
+
+        <!--temp dependencies-->
+        <!-- https://mvnrepository.com/artifact/com.google.appengine/appengine-api-1.0-sdk -->
+        <!--<dependency>-->
+        <!--<groupId>com.google.appengine</groupId>-->
+        <!--<artifactId>appengine-api-1.0-sdk</artifactId>-->
+        <!--<version>1.9.64</version>-->
+        <!--</dependency>-->
+
+        <!--<dependency>-->
+        <!--<groupId>javax.mail</groupId>-->
+        <!--<artifactId>mail</artifactId>-->
+        <!--<version>1.4.7</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+        <!--<groupId>commons-lang</groupId>-->
+        <!--<artifactId>commons-lang</artifactId>-->
+        <!--<version>2.5</version>-->
+        <!--</dependency>-->
+        <!--end-->
 
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -118,7 +118,7 @@
 
     </dependencies>
 
-	<build>
+    <build>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -143,8 +143,8 @@
 
             <!--end-->
 
-		</plugins>
-	</build>
+        </plugins>
+    </build>
 
 
 </project>

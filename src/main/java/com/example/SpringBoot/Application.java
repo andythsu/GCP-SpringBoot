@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @Configuration
-@SpringBootApplication(scanBasePackages = {"com.example.SpringBoot", "Services"})
+@SpringBootApplication(scanBasePackages = {"com.example.SpringBoot", "org.github.andythsu.GCP.Services"})
 public class Application {
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);

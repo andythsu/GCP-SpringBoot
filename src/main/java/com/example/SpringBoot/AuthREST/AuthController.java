@@ -1,18 +1,11 @@
 package com.example.SpringBoot.AuthREST;
 
-//import org.github.andythsu.GCP.Services.Datastore.DatastoreData;
-//import org.github.andythsu.GCP.Services.Datastore.DatastoreService;
-//import org.github.andythsu.GCP.Services.Email.Mail;
-//import org.github.andythsu.GCP.Services.Email.MailContent;
-//import org.github.andythsu.GCP.Services.Token.AuthToken;
-//import org.github.andythsu.GCP.Services.Token.TokenUtil;
-//import org.github.andythsu.GCP.Services.UtilService;
-import Services.Datastore.DatastoreData;
-import Services.Datastore.DatastoreService;
-import Services.Email.Mail;
-import Services.Email.MailContent;
-import Services.Token.AuthToken;
-import Services.Token.TokenUtil;
+import org.github.andythsu.GCP.Services.Datastore.DatastoreData;
+import org.github.andythsu.GCP.Services.Datastore.DatastoreService;
+import org.github.andythsu.GCP.Services.Email.Mail;
+import org.github.andythsu.GCP.Services.Email.MailContent;
+import org.github.andythsu.GCP.Services.Token.AuthToken;
+import org.github.andythsu.GCP.Services.Token.TokenUtil;
 import com.example.SpringBoot.DatastoreColumns;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
