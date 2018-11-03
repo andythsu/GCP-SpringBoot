@@ -9,7 +9,6 @@ import java.util.*;
  * @Date: 11/2/2018
  */
 
-@Component
 public class DatastoreData {
     /**
      * stores in (col,value) fashion

@@ -6,8 +6,10 @@ import Services.Error.MessageKey;
 import Services.Error.WebRequestException;
 import Services.Token.AuthToken;
 import Services.Token.TokenSession;
+import Services.Token.TokenUtil;
 import Services.UtilService;
 import com.example.SpringBoot.AuthREST.AuthMessageKey;
+import com.example.SpringBoot.DatastoreColumns;
 import com.google.cloud.Timestamp;
 //import com.google.cloud.datastore.Entity;
 //import org.github.andythsu.GCP.Services.Datastore.DatastoreData;
@@ -17,6 +19,7 @@ import com.google.cloud.Timestamp;
 //import org.github.andythsu.GCP.Services.Token.AuthToken;
 //import org.github.andythsu.GCP.Services.Token.TokenSession;
 //import org.github.andythsu.GCP.Services.UtilService;
+import com.google.cloud.datastore.Entity;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,12 +44,13 @@ public class SettingController {
 
     private final String SETTING_KIND = "setting";
 
-    public UtilService.commonNames commonNames;
-
     public DatastoreService db;
 
     @Autowired
-    public TokenSession tokenSession;
+    private TokenSession tokenSession;
+
+    @Autowired
+    private TokenUtil tokenUtil;
 
 //    @RequestMapping(value = "/settings.json", method = RequestMethod.PATCH)
 //    public String updateSetting(@RequestBody String body) {
@@ -78,8 +82,8 @@ public class SettingController {
             throw new WebRequestException(MessageKey.INVALID_JSON);
         }
         DatastoreData dd = new DatastoreData();
-        dd.put(commonNames.JSON, source.toString());
-        dd.put(commonNames.CREATEDAT, Timestamp.now());
+        dd.put(DatastoreService.DatastoreColumns.JSON, source.toString());
+        dd.put(DatastoreService.DatastoreColumns.CREATEDAT, Timestamp.now());
         return db.saveByKind(SETTING_KIND, dd, null);
     }
 
@@ -87,22 +91,17 @@ public class SettingController {
     @RequestMapping(value = "/settings.json", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public String getSetting(@RequestHeader(value="token") String token) {
 
-        AuthToken authToken = tokenSession.getToken(token);
-        if (authToken == null){
-            throw new WebRequestException(new AuthMessageKey(HttpURLConnection.HTTP_UNAUTHORIZED, "Not a valid token"));
-        }else{
-            return authToken.getExpiredAt().toString();
+        tokenUtil.validateToken(token);
+
+        Iterator<Entity> entityIterator = db.getLastCreatedByKind(SETTING_KIND);
+        String json = "";
+        // iterator will only contain 1 element (latest)
+        while (entityIterator.hasNext()) {
+            Entity en = entityIterator.next();
+            json = String.valueOf(en.getString(DatastoreService.DatastoreColumns.JSON));
         }
-
-
-
-//        Iterator<Entity> entityIterator = db.getLastCreatedByKind(SETTING_KIND);
-//        String json = "";
-//        // iterator will only contain 1 element (latest)
-//        while (entityIterator.hasNext()) {
-//            Entity en = entityIterator.next();
-//            json = String.valueOf(en.getString(commonNames.JSON));
-//        }
-//        return json;
+        return json;
     }
+
+
 }

@@ -20,7 +20,6 @@ import java.util.Properties;
  * @author: Andy Su
  * @Date: 11/1/2018
  */
-@Component
 public class Mail {
 
     public static void sendEmail(MailContent mailContent) {

@@ -9,9 +9,11 @@ package com.example.SpringBoot.AuthREST;
 //import org.github.andythsu.GCP.Services.UtilService;
 import Services.Datastore.DatastoreData;
 import Services.Datastore.DatastoreService;
+import Services.Email.Mail;
+import Services.Email.MailContent;
 import Services.Token.AuthToken;
 import Services.Token.TokenUtil;
-import Services.UtilService;
+import com.example.SpringBoot.DatastoreColumns;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,8 +36,8 @@ public class AuthController {
         AuthToken token = tokenUtil.acqureToken();
         // save to db
         DatastoreData dd = new DatastoreData();
-        dd.put(UtilService.commonNames.CREATEDAT, token.getCreatedAt());
-        dd.put(UtilService.commonNames.EXPIREDAT, token.getExpiredAt());
+        dd.put(DatastoreColumns.CREATEDAT, token.getCreatedAt());
+        dd.put(DatastoreColumns.EXPIREDAT, token.getExpiredAt());
         dd.put(TOKEN_COL, token.getToken());
         DatastoreService.saveByKind(AUTH_KIND, dd, null);
         // send email to user
@@ -46,8 +48,8 @@ public class AuthController {
                 .append("Expiry Date: ")
                 .append(token.getExpiredAtTime())
                 .toString();
-//        MailContent mailContent = new MailContent().subject("Token").body(body);
-//        Mail.sendEmail(mailContent);
+        MailContent mailContent = new MailContent().subject("Token").body(body);
+        Mail.sendEmail(mailContent);
     }
 
 }

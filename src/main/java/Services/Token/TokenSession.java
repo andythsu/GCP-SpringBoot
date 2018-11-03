@@ -8,7 +8,7 @@ import java.util.Map;
 @Component
 public class TokenSession {
     private static Map<String, AuthToken> session = new HashMap<>();
-    public AuthToken getToken(String key){
+    public AuthToken getSession(String key){
         if (hasSession(key)) return session.get(key);
         return null;
     }

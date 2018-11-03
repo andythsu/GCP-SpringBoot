@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
  * @author: Andy Su
  * @Date: 11/2/2018
  */
-@Component
+
 public class MailUserCredential {
     private final String userName;
     private final String password;

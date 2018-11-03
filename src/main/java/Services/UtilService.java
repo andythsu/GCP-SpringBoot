@@ -6,13 +6,6 @@ import org.json.JSONObject;
 
 public class UtilService {
 
-    public class commonNames{
-        public static final String JSON = "Json";
-        public static final String CREATEDAT = "CreatedAt";
-        public static final String EXPIREDAT = "ExpiredAt";
-        public static final String UPDATEDAT = "UpdatedAt";
-    }
-
     public static JSONObject parseToJSON(String json) {
         try {
             return new JSONObject(json);

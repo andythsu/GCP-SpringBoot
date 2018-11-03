@@ -36,6 +36,16 @@ public class MessageKey {
             .message("Invalid Credentials")
             .status(HttpURLConnection.HTTP_UNAUTHORIZED);
 
+    public static final MessageKey INVALID_TOKEN = new MessageKey()
+            .tag(MessageKeyTags.TOKEN_ERROR)
+            .message("Invalid token")
+            .status(HttpURLConnection.HTTP_UNAUTHORIZED);
+
+    public static final MessageKey EXPIRED_TOKEN = new MessageKey()
+            .tag(MessageKeyTags.TOKEN_ERROR)
+            .message("Token has expired. Request a new one")
+            .status(HttpURLConnection.HTTP_UNAUTHORIZED);
+
 
     public static class MessageKeyTags {
         public static final String DATA_ERROR = "DATA-ERROR";
@@ -43,13 +53,14 @@ public class MessageKey {
         public static final String INVALID_PARAM = "INVALID-PARAM";
         public static final String NETWORK_ERROR = "NETWORK-ERROR";
         public static final String CREDENTIAL_ERROR = "CREDENTIAL-ERROR";
+        public static final String TOKEN_ERROR = "TOKEN-ERROR";
         public static final String RUN_TIME_ERROR = "RUN-TIME-ERROR";
     }
 
     public MessageKey(final int status, final String tag, final String defaultMessage) {
+        this.status = status;
         this.tag = tag;
         this.defaultMessage = defaultMessage;
-        this.status = status;
     }
 
     public MessageKey(){ }
