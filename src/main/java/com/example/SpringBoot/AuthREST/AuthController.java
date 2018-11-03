@@ -18,30 +18,28 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class AuthController {
     private Logger log = LoggerFactory.getLogger(AuthController.class);
-    public static String AUTH_KIND = "auth";
-    public static String TOKEN_COL = "Token";
 
     @Autowired
     TokenUtil tokenUtil;
 
     @RequestMapping(value = "/auth/signin", method = RequestMethod.POST)
-    public void getToken(){
-        AuthToken token = tokenUtil.acqureToken();
+    public void acquireToken(){
+       AuthToken authToken = tokenUtil.acqureToken();
         // save to db
         DatastoreData dd = new DatastoreData();
-        dd.put(DatastoreService.DatastoreColumns.CREATEDAT, token.getCreatedAt());
-        dd.put(DatastoreService.DatastoreColumns.EXPIREDAT, token.getExpiredAt());
-        dd.put(TOKEN_COL, token.getToken());
-        DatastoreService.saveByKind(AUTH_KIND, dd, null);
+        dd.put(DatastoreService.DatastoreColumns.CREATEDAT, authToken.getCreatedAt());
+        dd.put(DatastoreService.DatastoreColumns.EXPIREDAT, authToken.getExpiredAt());
+        dd.put(DatastoreService.DatastoreColumns.TOKEN, authToken.getToken());
+        DatastoreService.saveByKind(DatastoreService.DatastoreKinds.AUTH, dd, null);
         // send email to user
         String body = new StringBuilder()
                 .append("Token: ")
-                .append(token.getToken())
+                .append(authToken.getToken())
                 .append("\n")
                 .append("Expiry Date: ")
-                .append(token.getExpiredAtTime())
+                .append(authToken.getExpiredAtTime())
                 .toString();
-        MailContent mailContent = new MailContent().subject("Token").body("dd");
+        MailContent mailContent = new MailContent().subject("Token").body(body);
         Mail.sendEmail(mailContent);
     }
 
