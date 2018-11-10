@@ -84,11 +84,12 @@
             <version>20160810</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.github.andythsu</groupId>
-            <artifactId>SpringBoot-Lib</artifactId>
-            <version>1.5.7</version>
-        </dependency>
+        <!--removed for now since it's already appended in project-->
+        <!--<dependency>-->
+            <!--<groupId>com.github.andythsu</groupId>-->
+            <!--<artifactId>SpringBoot-Lib</artifactId>-->
+            <!--<version>1.5.7</version>-->
+        <!--</dependency>-->
 
         <!--temp dependencies-->
         <!-- https://mvnrepository.com/artifact/com.google.appengine/appengine-api-1.0-sdk -->

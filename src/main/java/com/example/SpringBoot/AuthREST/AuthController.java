@@ -1,12 +1,14 @@
 package com.example.SpringBoot.AuthREST;
 
 
-import org.github.andythsu.GCP.Services.Datastore.DatastoreData;
-import org.github.andythsu.GCP.Services.Datastore.DatastoreService;
-import org.github.andythsu.GCP.Services.Email.Mail;
-import org.github.andythsu.GCP.Services.Email.MailContent;
-import org.github.andythsu.GCP.Services.Token.AuthToken;
-import org.github.andythsu.GCP.Services.Token.TokenUtil;
+import com.example.SpringBoot.Services.Datastore.DatastoreData;
+import com.example.SpringBoot.Services.Datastore.DatastoreService;
+import com.example.SpringBoot.Services.Email.Mail;
+import com.example.SpringBoot.Services.Email.MailContent;
+import com.example.SpringBoot.Services.Email.MailImp;
+import com.example.SpringBoot.Services.Email.MailUserCredential;
+import com.example.SpringBoot.Services.Token.AuthToken;
+import com.example.SpringBoot.Services.Token.TokenUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,9 @@ public class AuthController {
 
     @Autowired
     TokenUtil tokenUtil;
+
+    @Autowired
+    Mail mail;
 
     @RequestMapping(value = "/auth/signin", method = RequestMethod.POST)
     public void acquireToken(){
@@ -40,7 +45,17 @@ public class AuthController {
                 .append(authToken.getExpiredAtTime())
                 .toString();
         MailContent mailContent = new MailContent().subject("Token").body(body);
-        Mail.sendEmail(mailContent);
+        mail.sendEmail(new MailImp() {
+            @Override
+            public MailContent getContent() {
+                return mailContent;
+            }
+
+            @Override
+            public MailUserCredential getCredential() {
+                return null;
+            }
+        });
     }
 
 }

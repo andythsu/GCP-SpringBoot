@@ -1,14 +1,13 @@
 package com.example.SpringBoot.SettingREST;
 
-import com.google.cloud.Timestamp;
+import com.example.SpringBoot.Services.Datastore.DatastoreData;
+import com.example.SpringBoot.Services.Datastore.DatastoreService;
+import com.example.SpringBoot.Services.Error.MessageKey;
+import com.example.SpringBoot.Services.Error.WebRequestException;
+import com.example.SpringBoot.Services.Token.TokenSession;
+import com.example.SpringBoot.Services.Token.TokenUtil;
+import com.example.SpringBoot.Services.UtilService;
 import com.google.cloud.datastore.Entity;
-import org.github.andythsu.GCP.Services.Datastore.DatastoreData;
-import org.github.andythsu.GCP.Services.Datastore.DatastoreService;
-import org.github.andythsu.GCP.Services.Error.MessageKey;
-import org.github.andythsu.GCP.Services.Error.WebRequestException;
-import org.github.andythsu.GCP.Services.Token.TokenSession;
-import org.github.andythsu.GCP.Services.Token.TokenUtil;
-import org.github.andythsu.GCP.Services.UtilService;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,7 +70,6 @@ public class SettingController {
         }
         DatastoreData dd = new DatastoreData();
         dd.put(DatastoreService.DatastoreColumns.JSON, source.toString());
-        dd.put(DatastoreService.DatastoreColumns.CREATEDAT, Timestamp.now());
         return db.saveByKind(SETTING_KIND, dd, null);
     }
 
