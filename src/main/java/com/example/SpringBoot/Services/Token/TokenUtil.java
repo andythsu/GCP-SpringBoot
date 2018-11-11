@@ -69,7 +69,7 @@ public class TokenUtil {
     public AuthToken findTokenInDB(String token){
         DatastoreData dd = new DatastoreData();
         dd.put(DatastoreService.DatastoreColumns.TOKEN, token);
-        Iterator<Entity> en = DatastoreService.getAllByKindAndDataEq(DatastoreService.DatastoreKinds.AUTH, dd);
+        Iterator<Entity> en = DatastoreService.getAllByKindAndDataEqByOneData(DatastoreService.DatastoreKinds.AUTH, dd);
         AuthToken authToken = null;
         while (en.hasNext()){
             Entity e = en.next();

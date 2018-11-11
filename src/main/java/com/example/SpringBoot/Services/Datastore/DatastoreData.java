@@ -1,6 +1,8 @@
 package com.example.SpringBoot.Services.Datastore;
 
 import com.example.SpringBoot.Services.Definitions.KeyValuePair;
+import com.example.SpringBoot.Services.Error.MessageKey;
+import com.example.SpringBoot.Services.Error.WebRequestException;
 import com.google.cloud.Timestamp;
 
 import java.util.*;
@@ -15,16 +17,26 @@ import java.util.*;
  */
 public class DatastoreData extends KeyValuePair {
 
-    public DatastoreData(){
-        // generate CreatedAt when constructed
-        super.put(DatastoreService.DatastoreColumns.CREATEDAT, Timestamp.now());
-    }
-
-    public String getOneKey(){
+    public String getOneKey() {
         ArrayList<Object> arr_keys = new ArrayList<>(Arrays.asList(super.keySet().toArray()));
+        if (arr_keys.size() < 1) throw new WebRequestException(
+                MessageKey.SERVER_ERROR
+        );
         return (String) arr_keys.get(0);
     }
-    public boolean isEqual(DatastoreData target){
+
+    public ArrayList<String> getTwoKeys() {
+        ArrayList<Object> arr_keys = new ArrayList<>(Arrays.asList(super.keySet().toArray()));
+        if (arr_keys.size() < 2) throw new WebRequestException(
+                MessageKey.SERVER_ERROR
+        );
+        ArrayList<String> rtn = new ArrayList<>();
+        rtn.add((String) arr_keys.get(0));
+        rtn.add((String) arr_keys.get(1));
+        return rtn;
+    }
+
+    public boolean isEqual(DatastoreData target) {
         return super.getMap().equals(target.getMap());
     }
 }

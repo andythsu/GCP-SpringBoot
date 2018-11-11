@@ -1,5 +1,7 @@
 package com.example.SpringBoot.Services.Datastore;
 
+import com.example.SpringBoot.Services.Error.MessageKey;
+import com.example.SpringBoot.Services.Error.WebRequestException;
 import com.google.cloud.Timestamp;
 import com.google.cloud.datastore.*;
 import org.slf4j.Logger;
@@ -7,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.Iterator;
+import java.util.List;
 
 
 @Component
@@ -58,7 +61,7 @@ public class DatastoreService {
      * @return
      */
     public static String upsertByKindAndData(String kind, DatastoreData criteria, DatastoreData new_val) {
-        Iterator<Entity> entities = getAllByKindAndDataEq(kind, criteria);
+        Iterator<Entity> entities = getAllByKindAndDataEqByOneData(kind, criteria);
 
         while (entities.hasNext()) {
             Entity old_en = entities.next();
@@ -77,7 +80,6 @@ public class DatastoreService {
 
     /**
      * every field has to be equal
-     *
      * @param query
      * @param key
      * @param value
@@ -101,10 +103,9 @@ public class DatastoreService {
 
     /**
      * return all entities if exists (all fields have to equall)
-     *
      * @return
      */
-    public static Iterator<Entity> getAllByKindAndDataEq(String kind, DatastoreData dd) {
+    public static Iterator<Entity> getAllByKindAndDataEqByOneData(String kind, DatastoreData dd) {
         EntityQuery.Builder queryBuilder = Query.newEntityQueryBuilder()
                 .setKind(kind);
         String key = dd.getOneKey();
@@ -114,11 +115,50 @@ public class DatastoreService {
         return runQuery(query);
     }
 
+    public static Iterator<Entity> getAllByKindAndDataEqByTwoData(String kind, DatastoreData dd){
+        EntityQuery.Builder queryBuilder = Query.newEntityQueryBuilder()
+                .setKind(kind);
+        List<String> list = dd.getTwoKeys();
+        String key1 = list.get(0);
+        String key2 = list.get(1);
+        Object val1 = dd.get(key1);
+        Object val2 = dd.get(key2);
+
+        queryBuilder = eqByTwoData(queryBuilder, key1, val1, key2, val2);
+        Query query = queryBuilder.build();
+        return runQuery(query);
+    }
+
+    public static EntityQuery.Builder eqByTwoData(EntityQuery.Builder queryBuilder, String key1, Object val1, String key2, Object val2) {
+        StructuredQuery.Filter first = generateEqFilter(key1, val1);
+        StructuredQuery.Filter second = generateEqFilter(key2, val2);
+
+        if (first == null || second == null){
+            throw new WebRequestException(
+                MessageKey.SERVER_ERROR, first, second
+            );
+        }
+
+        queryBuilder.setFilter(
+                StructuredQuery.CompositeFilter.and(first,second));
+        return queryBuilder;
+    }
+
+    private static StructuredQuery.Filter generateEqFilter(String key, Object val) {
+        if (val instanceof String){
+            return StructuredQuery.PropertyFilter.eq(key, (String) val);
+        }else if (val instanceof Timestamp){
+            return StructuredQuery.PropertyFilter.eq(key, (Timestamp) val);
+        }else{
+            return null;
+        }
+    }
+
     /**
      * check if data exists in column
      */
     public static boolean isDataInKind(String kind, DatastoreData dd) {
-        Iterator<Entity> en = getAllByKindAndDataEq(kind, dd);
+        Iterator<Entity> en = getAllByKindAndDataEqByOneData(kind, dd);
         return en.hasNext();
     }
 
@@ -154,9 +194,13 @@ public class DatastoreService {
         return taskKey;
     }
 
+    public static String saveByKind(String kind, DatastoreData data){
+        return saveByKind(kind, data, null);
+    }
+
     public static String saveByKind(String kind, DatastoreData data, Key key) {
 
-        // ensure CreatedAt and UpdatedAt is set in DB
+        // ensure CreatedAt is set in DB
         if (!data.hasKey(DatastoreColumns.CREATEDAT)){
             data.put(DatastoreColumns.CREATEDAT, Timestamp.now());
         }
@@ -192,5 +236,6 @@ public class DatastoreService {
         }
         return entity;
     }
+
 
 }

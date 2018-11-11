@@ -43,6 +43,15 @@ public class MessageKey {
             .message("Token has expired. Request a new one")
             .status(HttpURLConnection.HTTP_UNAUTHORIZED);
 
+    public static final MessageKey SERVER_ERROR = new MessageKey()
+            .tag(MessageKeyTags.RUN_TIME_ERROR)
+            .message("Internal server error")
+            .status(HttpURLConnection.HTTP_INTERNAL_ERROR);
+
+    public static final MessageKey NULL_POINTER_ERROR = new MessageKey()
+            .tag(MessageKeyTags.NULL_POINTER_ERROR)
+            .message("Null pointer exception thrown")
+            .status(HttpURLConnection.HTTP_INTERNAL_ERROR);
 
     public static class MessageKeyTags {
         public static final String DATA_ERROR = "DATA-ERROR";
@@ -52,6 +61,7 @@ public class MessageKey {
         public static final String CREDENTIAL_ERROR = "CREDENTIAL-ERROR";
         public static final String TOKEN_ERROR = "TOKEN-ERROR";
         public static final String RUN_TIME_ERROR = "RUN-TIME-ERROR";
+        public static final String NULL_POINTER_ERROR = "NULL-POINTER-ERROR";
     }
 
     public MessageKey(final int status, final String tag, final String defaultMessage) {

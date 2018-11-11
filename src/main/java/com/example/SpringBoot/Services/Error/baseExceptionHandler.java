@@ -1,5 +1,6 @@
 package com.example.SpringBoot.Services.Error;
 
+import org.springframework.aop.ThrowsAdvice;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -16,7 +17,8 @@ public abstract class baseExceptionHandler extends ExceptionHandlerExceptionReso
     @ExceptionHandler(WebRequestException.class)
     public ResponseEntity<?> handleException(WebRequestException ex) {
         MessageKey msg = ex.getMessageKey();
-        return new ResponseEntity(msg, getStatus(msg.getStatus()));
+        String[] errorProperties = ex.getErrorProperties();
+        return new ResponseEntity(new WebRequestExceptionDto(msg, errorProperties), getStatus(msg.getStatus()));
     }
 
     @ExceptionHandler(Throwable.class)
@@ -41,6 +43,28 @@ public abstract class baseExceptionHandler extends ExceptionHandlerExceptionReso
         }
         protected ThrowableDto(String message) {
             super.tag(MessageKeyTags.RUN_TIME_ERROR).message(message);
+        }
+
+        public Throwable getCause() {
+            return cause;
+        }
+    }
+
+    //dto class for customizing WebRequestException fields
+    public static class WebRequestExceptionDto{
+        private MessageKey messageKey;
+        private String[] errorProperties;
+        public WebRequestExceptionDto(MessageKey messageKey, String[] errorProperties){
+            this.messageKey = messageKey;
+            this.errorProperties = errorProperties;
+        }
+
+        public MessageKey getMessageKey() {
+            return messageKey;
+        }
+
+        public String[] getErrorProperties() {
+            return errorProperties;
         }
     }
 }
