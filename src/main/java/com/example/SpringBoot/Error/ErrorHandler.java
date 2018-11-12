@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class ErrorHandler extends baseExceptionHandler {
 
     @ExceptionHandler(WebRequestException.class)
-    public ResponseEntity<?> handleException(WebRequestException ex){
+    public WebRequestExceptionDto handleException(WebRequestException ex){
         return super.handleException(ex);
     }
 

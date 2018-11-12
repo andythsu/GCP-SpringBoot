@@ -31,7 +31,6 @@ public class DemoController implements DemoRoute{
 
     @Override
     public List<DemoDto> getAll(){
-        List<DemoDto> list = new ArrayList<>();
         Iterator<Entity> entities = DatastoreService.getAllByKind(DatastoreService.DatastoreKinds.DEMO);
         return generateData(entities);
     }

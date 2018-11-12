@@ -25,7 +25,7 @@ public class TokenUtil {
     private TokenSession tokenSession;
 
     /**
-     * return a brand new token
+     * returns a brand new token
      * @return AuthToken
      */
     public AuthToken acqureToken(){
