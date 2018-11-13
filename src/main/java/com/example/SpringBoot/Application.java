@@ -1,5 +1,7 @@
 package com.example.SpringBoot;
 
+import com.example.SpringBoot.Services.Error.MessageKey;
+import com.example.SpringBoot.Services.Error.WebRequestException;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Configuration;
@@ -10,13 +12,13 @@ import org.springframework.web.bind.annotation.RestController;
 @SpringBootApplication(scanBasePackages = {"com.example.SpringBoot"})
 @RestController
 public class Application {
-	public static void main(String[] args) {
-		SpringApplication.run(Application.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
+    }
 
-	@RequestMapping("/")
-	public String welcome(){
-		return "hello world";
-	}
+    @RequestMapping("/")
+    public String welcome() {
+        return "hello world";
+    }
 }
 

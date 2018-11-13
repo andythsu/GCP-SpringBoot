@@ -30,20 +30,15 @@ public abstract class baseExceptionHandler extends ExceptionHandlerExceptionReso
 
     // dto class for general throable exceptions
     public static class ThrowableDto extends MessageKey {
-        private Throwable cause;
 
         public ThrowableDto(Throwable t) {
             this(t.getMessage());
-            this.cause = t.getCause();
         }
 
         protected ThrowableDto(String message) {
             super.tag(MessageKeyTags.RUN_TIME_ERROR).message(message);
         }
 
-        public Throwable getCause() {
-            return cause;
-        }
     }
 
     //dto class for customizing WebRequestException fields
