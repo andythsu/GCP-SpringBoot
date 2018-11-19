@@ -26,6 +26,7 @@
         <gcp.appengine.maven.plugin>1.3.2</gcp.appengine.maven.plugin>
         <gcp.library>1.48.0</gcp.library>
         <java.version>1.8</java.version>
+        <docker.image.prefix>GCP</docker.image.prefix>
     </properties>
 
     <!--jitpack-->
@@ -86,9 +87,9 @@
 
         <!--Remove dependency since it's now appended into project-->
         <!--<dependency>-->
-            <!--<groupId>com.github.andythsu</groupId>-->
-            <!--<artifactId>SpringBoot-Lib</artifactId>-->
-            <!--<version>1.5.9</version>-->
+        <!--<groupId>com.github.andythsu</groupId>-->
+        <!--<artifactId>SpringBoot-Lib</artifactId>-->
+        <!--<version>1.5.9</version>-->
         <!--</dependency>-->
 
         <!--temp dependencies-->
@@ -111,6 +112,7 @@
             <artifactId>commons-lang3</artifactId>
             <version>3.1</version>
         </dependency>
+
 
     </dependencies>
 
@@ -139,8 +141,57 @@
 
             <!--end-->
 
+            <!-- docker build -->
+            <plugin>
+                <groupId>com.spotify</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>1.2.0</version>
+                <configuration>
+                    <imageName>GCP</imageName>
+                    <baseImage>java</baseImage>
+                    <imageTags>
+                        <imageTag>${project.version}</imageTag>
+                        <imageTag>latest</imageTag>
+                    </imageTags>
+                    <entryPoint>["java", "-jar", "/${project.build.finalName}.jar"]</entryPoint>
+                    <!-- copy the service's jar file from target into the root directory of the image -->
+                    <resources>
+                        <resource>
+                            <targetPath>/</targetPath>
+                            <directory>${project.build.directory}</directory>
+                            <include>${project.build.finalName}.jar</include>
+                        </resource>
+                    </resources>
+                </configuration>
+            </plugin>
+            <!-- end -->
+
+            <!-- ensure jar is unpacked before the docker image is created -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>unpack</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>${project.groupId}</groupId>
+                                    <artifactId>${project.artifactId}</artifactId>
+                                    <version>${project.version}</version>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- end -->
+
         </plugins>
     </build>
-
 
 </project>
