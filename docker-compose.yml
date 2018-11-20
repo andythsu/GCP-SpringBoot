@@ -1,0 +1,6 @@
+gcp:
+  build: .
+  ports:
+    - "80:80"
+  volumes:
+    - ~/.config/:/root/.config
