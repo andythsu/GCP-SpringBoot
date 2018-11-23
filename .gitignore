@@ -3,6 +3,9 @@
 
 .mvn/
 
+### gcp_config ###
+gcp_config/
+
 ### STS ###
 .apt_generated
 .classpath

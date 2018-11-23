@@ -20,23 +20,9 @@ public class DatastoreService {
 
     private Logger log = LoggerFactory.getLogger(DatastoreService.class);
 
-//    private final static Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
+    private final static Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
 
-    private static Datastore datastore;
-
-    private static KeyFactory keyFactory;
-
-    static {
-        try {
-            datastore = DatastoreOptions.newBuilder()
-                        .setCredentials(ServiceAccountCredentials.fromStream(new FileInputStream("GCP_service_account.json")))
-                        .build()
-                        .getService();
-            keyFactory = datastore.newKeyFactory();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+    private final static KeyFactory keyFactory = datastore.newKeyFactory();
 
     public static class DatastoreColumns{
         public static final String CREATEDAT = "CreatedAt";
