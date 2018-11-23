@@ -2,12 +2,15 @@ package com.example.SpringBoot.Services.Datastore;
 
 import com.example.SpringBoot.Services.Error.MessageKey;
 import com.example.SpringBoot.Services.Error.WebRequestException;
+import com.google.auth.oauth2.ServiceAccountCredentials;
 import com.google.cloud.Timestamp;
 import com.google.cloud.datastore.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
@@ -17,9 +20,23 @@ public class DatastoreService {
 
     private Logger log = LoggerFactory.getLogger(DatastoreService.class);
 
-    private final static Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
+//    private final static Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
 
-    private final static KeyFactory keyFactory = datastore.newKeyFactory();
+    private static Datastore datastore;
+
+    private static KeyFactory keyFactory;
+
+    static {
+        try {
+            datastore = DatastoreOptions.newBuilder()
+                        .setCredentials(ServiceAccountCredentials.fromStream(new FileInputStream("GCP_service_account.json")))
+                        .build()
+                        .getService();
+            keyFactory = datastore.newKeyFactory();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public static class DatastoreColumns{
         public static final String CREATEDAT = "CreatedAt";
