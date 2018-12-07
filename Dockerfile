@@ -1,6 +1,6 @@
 FROM gcr.io/google-appengine/openjdk
 
-MAINTAINER Andy Su <andythsu.98@gmail.com>
+LABEL MAINTAINER="Andy Su <andythsu.98@gmail.com>" 
 
 # RUN apt-get -y update && apt-get install -y \
 #  	default-jdk \
