@@ -3,6 +3,7 @@ package com.example.SpringBoot.Services.Error;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.HttpURLConnection;
 import java.util.Arrays;
 
 
@@ -12,6 +13,10 @@ public class WebRequestException extends RuntimeException{
 
     private MessageKey messageKey;
     private String[] errorProperties;
+
+    public WebRequestException(Exception e){
+        this.messageKey = new MessageKey(HttpURLConnection.HTTP_INTERNAL_ERROR, MessageKey.MessageKeyTags.RUN_TIME_ERROR, e.getMessage());
+    }
 
     public WebRequestException(MessageKey messageKey){
         this.messageKey = messageKey;

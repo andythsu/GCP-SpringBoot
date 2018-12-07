@@ -31,3 +31,4 @@ gcp_config/
 /dist/
 /nbdist/
 /.nb-gradle/
+*.log

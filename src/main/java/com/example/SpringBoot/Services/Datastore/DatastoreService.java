@@ -20,12 +20,43 @@ public class DatastoreService {
 
     private final static Logger log = LoggerFactory.getLogger(DatastoreService.class);
 
-    private final static Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
+    private static DatastoreService datastoreService;
 
-    private final static KeyFactory keyFactory = datastore.newKeyFactory();
+    private Datastore datastore;
 
-	public DatastoreService(){
+    private KeyFactory keyFactory;
+
+    private DatastoreService(){
+        init();
         log.info("datastore service: {}", datastore);
+    }
+
+    public static DatastoreService getInstance(){
+        if(datastoreService == null){
+            datastoreService = new DatastoreService();
+        }
+        return datastoreService;
+    }
+
+    private void init(){
+        initDatastore();
+        initKeyFactory();
+    }
+
+    private void initDatastore(){
+        try{
+            datastore = DatastoreOptions.getDefaultInstance().getService();
+        }catch(Exception e){
+            throw new WebRequestException(e);
+        }
+    }
+
+    private void initKeyFactory(){
+        try{
+            keyFactory = datastore.newKeyFactory();
+        }catch(Exception e){
+            throw new WebRequestException(e);
+        }
     }
 	
     public static class DatastoreColumns{
@@ -43,14 +74,14 @@ public class DatastoreService {
         public static final String DEMO = "demo";
     }
 
-    public static Iterator<Entity> getAllByKind(String kind) {
+    public Iterator<Entity> getAllByKind(String kind) {
         Query<Entity> query = Query.newEntityQueryBuilder()
                 .setKind(kind)
                 .build();
         return runQuery(query);
     }
 
-    public static Iterator<Entity> getLastCreatedByKind(String kind) {
+    public Iterator<Entity> getLastCreatedByKind(String kind) {
         Query<Entity> query = Query.newEntityQueryBuilder()
                 .setKind(kind)
                 .setOrderBy(StructuredQuery.OrderBy.desc(DatastoreColumns.CREATEDAT))
@@ -67,7 +98,7 @@ public class DatastoreService {
      * @param new_val
      * @return
      */
-    public static String upsertByKindAndData(String kind, DatastoreData criteria, DatastoreData new_val) {
+    public String upsertByKindAndData(String kind, DatastoreData criteria, DatastoreData new_val) {
         Iterator<Entity> entities = getAllByKindAndDataEqByOneData(kind, criteria);
 
         while (entities.hasNext()) {
@@ -92,7 +123,7 @@ public class DatastoreService {
      * @param value
      * @return
      */
-    public static EntityQuery.Builder eqByOneData(EntityQuery.Builder query, String key, Object value) {
+    public EntityQuery.Builder eqByOneData(EntityQuery.Builder query, String key, Object value) {
         if (value instanceof String) {
             query.setFilter(StructuredQuery.PropertyFilter.eq(key, (String) value));
         } else if (value instanceof Integer) {
@@ -112,7 +143,7 @@ public class DatastoreService {
      * return all entities if exists (all fields have to equall)
      * @return
      */
-    public static Iterator<Entity> getAllByKindAndDataEqByOneData(String kind, DatastoreData dd) {
+    public Iterator<Entity> getAllByKindAndDataEqByOneData(String kind, DatastoreData dd) {
         EntityQuery.Builder queryBuilder = Query.newEntityQueryBuilder()
                 .setKind(kind);
         String key = dd.getOneKey();
@@ -122,7 +153,7 @@ public class DatastoreService {
         return runQuery(query);
     }
 
-    public static Iterator<Entity> getAllByKindAndDataEqByTwoData(String kind, DatastoreData dd){
+    public Iterator<Entity> getAllByKindAndDataEqByTwoData(String kind, DatastoreData dd){
         EntityQuery.Builder queryBuilder = Query.newEntityQueryBuilder()
                 .setKind(kind);
         List<String> list = dd.getTwoKeys();
@@ -136,7 +167,7 @@ public class DatastoreService {
         return runQuery(query);
     }
 
-    public static EntityQuery.Builder eqByTwoData(EntityQuery.Builder queryBuilder, String key1, Object val1, String key2, Object val2) {
+    public EntityQuery.Builder eqByTwoData(EntityQuery.Builder queryBuilder, String key1, Object val1, String key2, Object val2) {
         StructuredQuery.Filter first = generateEqFilter(key1, val1);
         StructuredQuery.Filter second = generateEqFilter(key2, val2);
 
@@ -151,7 +182,7 @@ public class DatastoreService {
         return queryBuilder;
     }
 
-    private static StructuredQuery.Filter generateEqFilter(String key, Object val) {
+    private StructuredQuery.Filter generateEqFilter(String key, Object val) {
         if (val instanceof String){
             return StructuredQuery.PropertyFilter.eq(key, (String) val);
         }else if (val instanceof Timestamp){
@@ -164,12 +195,12 @@ public class DatastoreService {
     /**
      * check if data exists in column
      */
-    public static boolean isDataInKind(String kind, DatastoreData dd) {
+    public boolean isDataInKind(String kind, DatastoreData dd) {
         Iterator<Entity> en = getAllByKindAndDataEqByOneData(kind, dd);
         return en.hasNext();
     }
 
-    public static Iterator<Entity> runQuery(Query<Entity> query) {
+    public Iterator<Entity> runQuery(Query<Entity> query) {
         return datastore.run(query);
     }
 
@@ -186,7 +217,7 @@ public class DatastoreService {
 //        return totalCount;
 //    }
 
-    public static Iterator<Entity> getLastUpdatedByKind(String kind) {
+    public Iterator<Entity> getLastUpdatedByKind(String kind) {
         Query<Entity> query = Query.newEntityQueryBuilder()
                 .setKind(kind)
                 .setOrderBy(StructuredQuery.OrderBy.desc(DatastoreColumns.UPDATEDAT))
@@ -195,17 +226,17 @@ public class DatastoreService {
         return runQuery(query);
     }
 
-    public static Key autoGenKey(String kind) {
+    public Key autoGenKey(String kind) {
         keyFactory.setKind(kind);
         Key taskKey = datastore.allocateId(keyFactory.newKey());
         return taskKey;
     }
 
-    public static String saveByKind(String kind, DatastoreData data){
+    public String saveByKind(String kind, DatastoreData data){
         return saveByKind(kind, data, null);
     }
 
-    public static String saveByKind(String kind, DatastoreData data, Key key) {
+    public String saveByKind(String kind, DatastoreData data, Key key) {
 
         // ensure CreatedAt is set in DB
         if (!data.hasKey(DatastoreColumns.CREATEDAT)){
@@ -226,7 +257,7 @@ public class DatastoreService {
         return insertedKey.toString();
     }
 
-    private static FullEntity.Builder buildEntity(FullEntity.Builder entity, DatastoreData dd) {
+    private FullEntity.Builder buildEntity(FullEntity.Builder entity, DatastoreData dd) {
         for (String key : dd.keySet()) {
             Object value = dd.get(key);
             if (value instanceof String) {

@@ -24,6 +24,8 @@ public class TokenUtil {
     @Autowired
     private TokenSession tokenSession;
 
+    private DatastoreService datastoreService = DatastoreService.getInstance();
+
     /**
      * returns a brand new token
      * @return AuthToken
@@ -69,7 +71,7 @@ public class TokenUtil {
     public AuthToken findTokenInDB(String token){
         DatastoreData dd = new DatastoreData();
         dd.put(DatastoreService.DatastoreColumns.TOKEN, token);
-        Iterator<Entity> en = DatastoreService.getAllByKindAndDataEqByOneData(DatastoreService.DatastoreKinds.AUTH, dd);
+        Iterator<Entity> en = datastoreService.getAllByKindAndDataEqByOneData(DatastoreService.DatastoreKinds.AUTH, dd);
         AuthToken authToken = null;
         while (en.hasNext()){
             Entity e = en.next();

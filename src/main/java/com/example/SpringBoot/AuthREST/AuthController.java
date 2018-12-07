@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-
 @RestController
 public class AuthController {
     private Logger log = LoggerFactory.getLogger(AuthController.class);
@@ -27,6 +26,8 @@ public class AuthController {
     @Autowired
     Mail mail;
 
+    private DatastoreService datastoreService = DatastoreService.getInstance();
+
     @RequestMapping(value = "/auth/signin", method = RequestMethod.POST)
     public void acquireToken(){
        AuthToken authToken = tokenUtil.acqureToken();
@@ -35,7 +36,7 @@ public class AuthController {
         dd.put(DatastoreService.DatastoreColumns.CREATEDAT, authToken.getCreatedAt());
         dd.put(DatastoreService.DatastoreColumns.EXPIREDAT, authToken.getExpiredAt());
         dd.put(DatastoreService.DatastoreColumns.TOKEN, authToken.getToken());
-        DatastoreService.saveByKind(DatastoreService.DatastoreKinds.AUTH, dd, null);
+        datastoreService.saveByKind(DatastoreService.DatastoreKinds.AUTH, dd, null);
         // send email to user
         String body = new StringBuilder()
                 .append("Token: ")

@@ -29,9 +29,11 @@ public class DemoController implements DemoRoute{
 
     private Logger log = LoggerFactory.getLogger(DemoController.class);
 
+    private DatastoreService datastoreService = DatastoreService.getInstance();
+
     @Override
     public List<DemoDto> getAll(){
-        Iterator<Entity> entities = DatastoreService.getAllByKind(DatastoreService.DatastoreKinds.DEMO);
+        Iterator<Entity> entities = datastoreService.getAllByKind(DatastoreService.DatastoreKinds.DEMO);
         return generateData(entities);
     }
 
@@ -43,7 +45,7 @@ public class DemoController implements DemoRoute{
         String kind = DatastoreService.DatastoreKinds.DEMO;
         DatastoreData dd = new DatastoreData();
         dd.put(DemoDto.TypeCol, type);
-        Iterator entities = DatastoreService.getAllByKindAndDataEqByOneData(kind, dd);
+        Iterator entities = datastoreService.getAllByKindAndDataEqByOneData(kind, dd);
         return generateData(entities);
     }
 
@@ -56,7 +58,7 @@ public class DemoController implements DemoRoute{
         DatastoreData dd = new DatastoreData();
         dd.put(DemoDto.TypeCol, type);
         dd.put(DemoDto.NameCol, name);
-        Iterator entities = DatastoreService.getAllByKindAndDataEqByTwoData(kind, dd);
+        Iterator entities = datastoreService.getAllByKindAndDataEqByTwoData(kind, dd);
         return generateData(entities);
     }
 
@@ -74,7 +76,7 @@ public class DemoController implements DemoRoute{
         dd.put(DemoDto.NameCol, name);
         dd.put(DemoDto.TypeCol, type);
         dd.put(DemoDto.ValueCol, value);
-        return DatastoreService.saveByKind(kind, dd);
+        return datastoreService.saveByKind(kind, dd);
     }
 
     private ArrayList<DemoDto> generateData(Iterator<Entity> entities){

@@ -21,6 +21,8 @@ import java.util.Properties;
 @Component
 public class Mail {
 
+    private DatastoreService datastoreService = DatastoreService.getInstance();
+
     public void sendEmail(MailImp mail){
        MailContent content = mail.getContent();
        MailUserCredential credential = mail.getCredential();
@@ -76,7 +78,7 @@ public class Mail {
         String user_col = "Username";
         String pwd_col = "Password";
 
-        Iterator<Entity> data = DatastoreService.getLastUpdatedByKind(credential_col);
+        Iterator<Entity> data = datastoreService.getLastUpdatedByKind(credential_col);
         MailUserCredential credential = null;
         while (data.hasNext()) {
             Entity en = data.next();
