@@ -18,12 +18,16 @@ import java.util.List;
 @Component
 public class DatastoreService {
 
-    private Logger log = LoggerFactory.getLogger(DatastoreService.class);
+    private final static Logger log = LoggerFactory.getLogger(DatastoreService.class);
 
     private final static Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
 
     private final static KeyFactory keyFactory = datastore.newKeyFactory();
 
+	public DatastoreService(){
+        log.info("datastore service: {}", datastore);
+    }
+	
     public static class DatastoreColumns{
         public static final String CREATEDAT = "CreatedAt";
         public static final String EXPIREDAT = "ExpiredAt";
